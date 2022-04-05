@@ -1,5 +1,6 @@
 package com.capgemini.tutorialsjdbctemplate.repository;
 
+import com.capgemini.tutorialsjdbctemplate.exception.ResourceNotFoundException;
 import com.capgemini.tutorialsjdbctemplate.model.Tutorial;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -29,8 +30,8 @@ public class JdbcTutorialRepository implements TutorialRepository {
             Tutorial tutorial = jdbcTemplate.queryForObject("SELECT * FROM tutorials WHERE id=?",
                     BeanPropertyRowMapper.newInstance(Tutorial.class), id);
             return tutorial;
-        } catch (IncorrectResultSizeDataAccessException e) {
-            return null;
+        } catch (ResourceNotFoundException e) {
+            throw new ResourceNotFoundException("Not found Tutorial with id = " + id);
         }
     }
     @Override
